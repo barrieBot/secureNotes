@@ -1,0 +1,65 @@
+if24b007:Tourplaner_Project leonardobarrientos$ cat .gitignore 
+# --- OS Generiert ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+.fuse_hidden
+*.directory
+.Trash-*
+.nfs*
+
+# --- IDEs & Editoren ---
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# --- WebStorm / JetBrains ---
+.idea/
+*.iws
+*.iml
+*.ipr
+# WebStorm spezifische Caches & Test-Reports
+.dbvis/
+atlassian-ide-plugin.xml
+.idea/shelf/
+.idea/workspace.xml
+.idea/sonarlint/
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# --- Node / Angular ---
+node_modules/
+/dist/
+/.angular/
+npm-debug.log*
+yarn-error.log*
+.package-lock.json
+
+# --- Java / Spring Boot ---
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+*.class
+*.war
+*.ear
+*.jar
+
+# --- Sicherheit & Konfiguration ---
+.env
+.env.local
+.env.*.local
+*.properties
