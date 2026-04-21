@@ -2,7 +2,12 @@
 import {ref, onMounted} from "vue";
 const password = ref('')
 const passwordInput = ref<HTMLInputElement | null>(null)
+
 defineEmits(["save", "discard", "cancel"])
+
+const clear = () => {
+  password.value = ''
+}
 
 onMounted(() => passwordInput.value?.focus())
 
@@ -57,18 +62,25 @@ onMounted(() => passwordInput.value?.focus())
 .password-popup {
   background: white;
   padding: 16px;
-  width: 250px;
+}
+
+.password-input {
+  width: 100%;
+  margin-top: 16px;
 }
 
 .actions {
   display: flex;
   flex-direction: row;
   justify-content: right;
+  margin-left: 20px;
+  gap: 8px;
+  padding-top: 16px;
 }
 
 button {
-  padding: 16px;
-  border-radius: 3px;
+  padding-block: 8px;
+  border: none;
 }
 
 .save {

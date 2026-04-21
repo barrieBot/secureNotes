@@ -2,7 +2,7 @@ import { defineStore} from "pinia";
 import api from '../utils/api';
 import {encryptionUtils} from "@/utils/crypto";
 import {authStore} from "@/stores/auth";
-import {Note} from "@/utils/note"
+import {Note} from "@/types/note"
 
 
 export const NotesStore = defineStore('notes', {
@@ -30,8 +30,10 @@ export const NotesStore = defineStore('notes', {
             const key_x10k = encryptionUtils.keyHashing(key, salt, 10000)
             const key_x15k = encryptionUtils.keyHashing(key, salt, 15000)
 
-            const response = await api.post(`/notes/${id}`, {
-                key: key_x15k
+            const response = await api.get(`/notes/${id}`, {
+                headers: {
+                    'note-key': key_x15k
+                }
             });
             try {
                 note.decryptedMsg = encryptionUtils.decrypt(response.data.toString(), key_x10k);

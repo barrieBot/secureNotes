@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { authStore } from '../stores/auth';
-import { NotesStore} from "../stores/notes";
+import { authStore } from '@/stores/auth';
+import { NotesStore} from "@/stores/notes";
 import {computed} from "vue";
 
 const auth = authStore()
@@ -20,7 +20,7 @@ const logout = () => { auth.logout() }
     <h3>SecureNotes</h3>
   </div>
 
-  <div class="nav-right" v-if="!isLoggedIn">
+  <div class="nav-right" v-if="isLoggedIn">
 
     <button class="nav-button"
         @click="addNote"

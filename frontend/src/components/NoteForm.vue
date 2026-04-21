@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 
+
+
 const title = ref('')
 const noteMsg = ref('')
 const dirty = computed(() => {
@@ -36,6 +38,7 @@ defineEmits(['saveNote'])
     <button
         class="save-button"
         :disabled="!dirty"
+        @click="$emit('saveNote')"
     >
       Save Note
     </button>

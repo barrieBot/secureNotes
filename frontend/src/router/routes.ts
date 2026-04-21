@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import {createWebHistory, createRouter} from 'vue-router'
 import { authStore } from '@/stores/auth'
 
 
@@ -19,7 +19,7 @@ const router = createRouter({
     routes,
 })
 
-/*
+
 router.beforeEach((to, from, next) => {
     const auth = authStore()
     if(to.meta.requiresAuth && !auth.jwt) {
@@ -28,7 +28,6 @@ router.beforeEach((to, from, next) => {
         next()
     }
 })
-*/
 
 
 export default router

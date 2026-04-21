@@ -1,7 +1,7 @@
 export interface EncryptedNote {
-    id: string;
+    id?: string;
     owner: string;
     title: string;
     content: string;
-    sec_hash: string;
+    sec_hash?: string;
 }

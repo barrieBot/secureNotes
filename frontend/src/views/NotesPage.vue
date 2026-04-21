@@ -4,13 +4,18 @@ import NoteForm from "@/components/NoteForm.vue"
 import NoteView from "@/components/NoteView.vue"
 import SaveNotePopup from "@/components/SaveNotePopup.vue";
 import { NotesStore } from "@/stores/notes";
-import { Note } from "@/utils/note";
+import { Note } from "@/types/note";
 import {onBeforeUnmount, onMounted, ref} from "vue";
+import {INoteFormInterface} from "@/types/NoteFormInterface";
+import {ISaveNotePopupInterface} from "@/types/SaveNotePopupInterface";
+import {onBeforeRouteLeave} from "vue-router";
 
 const notesStore = NotesStore();
 const pendingSelectedNoteId = ref<string | null>(null);
+const noteForm = ref<INoteFormInterface | null>(null);
+
 const showSaveNotePopup = ref(false);
-const noteForm = ref<any>();
+const saveNotePopup = ref<ISaveNotePopupInterface | null>(null);
 
 onMounted(() => {
   notesStore.fetchNotes();
@@ -27,21 +32,33 @@ const handleTabClose = (e: BeforeUnloadEvent) => {
     /// Do I need to put a prop in the Save-Popup, that the interaction might close the tab?
     /// Maybe 2nd Popup, with a Close-Flag?
     showSaveNotePopup.value = true;
+
     e.preventDefault();
+    e.returnValue = "You have an unsaved Note. Are you sure you want to leave?";
+    return e.returnValue;
   }
 }
 
-
+onBeforeRouteLeave((to, from, next) => {
+  if(noteForm.value.dirty){
+    pendingSelectedNoteId.value = to.path;
+    showSaveNotePopup.value = true;
+    next(false)
+  } else {
+    next();
+  }
+})
 
 /// Save-Note-Dialog
 const onSaveNote = async (password: string) => {
   const title = noteForm.value.title;
-  const message = noteForm.value.message;
+  const message = noteForm.value.noteMsg;
 
 
   const newNote = await notesStore.saveNote(title, message, password);
 
-  noteForm.value.clear
+  noteForm.value.clear();
+  saveNotePopup.value.clear();
   if(pendingSelectedNoteId.value){
     onPendingNoteSelection();
   } else {
@@ -50,12 +67,14 @@ const onSaveNote = async (password: string) => {
 }
 
 const onDiscardNote = () => {
-  noteForm.value.clearFields();
+  noteForm.value.clear();
+  saveNotePopup.value.clear()
   onPendingNoteSelection();
 }
 
 const onCancelSaveNote = () => {
   showSaveNotePopup.value = false;
+  saveNotePopup.value.clear()
 }
 
 /// Select Note from List
@@ -83,7 +102,7 @@ const onPendingNoteSelection = () => {
 <template>
 <div class="content">
   <aside class="note-list"
-         v-if="notesStore.notes.length >= 0"
+         v-if="notesStore.notes.length > 0"
   >
     <div class="list-header">
       <h3>Notes</h3>
@@ -165,6 +184,7 @@ const onPendingNoteSelection = () => {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+
 }
 
 .add-note-button{

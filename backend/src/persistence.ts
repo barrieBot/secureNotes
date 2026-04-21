@@ -1,23 +1,17 @@
 import { EncryptedNote } from "./encryptedNote";
+import {nanoid} from "nanoid";
 
 
 /// Remove when DB
-const sessions = new Map<string, string>();
 const encryptedNoteStore = new Map<string, EncryptedNote[]>();
 
 
-export function addSession(token:string, user: string){
-    sessions.set(token, user);
-}
-
-export function retrieveSession(token: string){
-    return sessions.get(token) || null;
-}
-
-export function addNote(user: string, note: EncryptedNote) {
+export function addNote(user: string, note: EncryptedNote): EncryptedNote | null {
+    note.id = nanoid();
     const notes = encryptedNoteStore.get(user) || [];
     notes.push(note);
     encryptedNoteStore.set(user, notes);
+    return note;
 }
 
 export function getNotes(user: string) {

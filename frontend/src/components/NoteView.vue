@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NotesStore } from '@/stores/notes'
-import { Note } from '@/utils/note'
+import { Note } from '@/types/note'
 import {computed, ref} from "vue";
 
 const notes = NotesStore();
