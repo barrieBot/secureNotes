@@ -15,11 +15,11 @@ export const authStore = defineStore("auth", {
             this.username = username;
             this.pwd_hash_x2k = encryptionUtils.keyHashing(password, username.toLowerCase(), 2000)
             const pwd_hash =  encryptionUtils.keyHashing(password, username.toLowerCase(), 10000)
-            const token = await  api.put('auth', {
+            const response = await  api.post('auth', {
                 username: username,
                 password: pwd_hash
             })
-            this.jwt = token.data.toString()
+            this.jwt = response.data.token
             return true
         },
         logout() {

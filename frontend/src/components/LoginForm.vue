@@ -13,7 +13,7 @@ const isValidLogin = computed(() => {
 })
 
 const login = () => {
-  if( !isValidLogin ){ return }
+  if( !isValidLogin.value ){ return }
 
   isLoading.value = true
 
