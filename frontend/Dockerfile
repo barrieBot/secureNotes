@@ -23,18 +23,14 @@ RUN npm run build
 #
 FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS live
 
-# delete default 
-#RUN rm -rf /usr/share/nginx/html/*
-
 # copy output from the build to default serving dir
 COPY --chown=nginx:nginx --from=builder /app/dist /usr/share/nginx/html
 
-# Copy custom Nginx config (handles Vue Router history mode)
+# Copy custom Nginx config 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # use non root user
 USER nginx
-
 
 # default nginx container listens at 8080
 EXPOSE 8080
