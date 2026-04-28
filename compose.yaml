@@ -1,0 +1,23 @@
+services:
+
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: live
+    ports:
+      - 1234:1234
+    env_file:
+      - .env.example
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: live
+    ports:
+      - 8080:8080
+    env_file:
+      - .env.example
+    depends_on:
+      - server
