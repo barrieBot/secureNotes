@@ -1,0 +1,2 @@
+user worker on >worker_pass ~* &* allcommands
+user default off nopass nocommands
