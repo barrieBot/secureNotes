@@ -4,7 +4,6 @@ import {generateUserHash, decrypt, encrypt} from "./crypto";
 import { EncryptedNote } from "./encryptedNote";
 import {addNote, getNote, getNotes} from "./persistence"
 import {auth} from "./auth";
-import './types.d.ts'
 
 const server = Fastify({logger: true});
 
