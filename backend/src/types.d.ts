@@ -1,9 +1,10 @@
 import 'fastify'
 
-declare module 'fastify' {
-    interface FastifyRequest {
-        user: {
-            user_hash: string;
-        }
+declare module '@fastify/jwt' {
+    interface FastifyJWT {
+        payload: { user_hash: string };
+        user: { user_hash: string };
     }
 }
+
+export { };

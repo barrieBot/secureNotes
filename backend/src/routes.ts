@@ -3,6 +3,7 @@ import { generateUserHash, decrypt, encrypt } from "./crypto";
 import { EncryptedNote } from "./encryptedNote";
 import { addNote, getNote, getNotes } from "./persistence";
 import { auth } from "./auth";
+import './types.d'
 
 export async function routes(app: FastifyInstance) {
 
