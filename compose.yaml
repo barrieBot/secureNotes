@@ -1,0 +1,42 @@
+services:
+
+  server:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: live
+    ports:
+      - 1234:1234
+    env_file:
+      - .env.example
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: live
+    ports:
+      - 8080:8080
+    env_file:
+      - .env.example
+    depends_on:
+      - server
+
+  redis:
+    image: redis:8
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+    volumes:
+      - redis-data:/data
+      - ./database/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./database/users.acl:/usr/local/etc/redis/users.acl
+    entrypoint: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+
+volumes:
+  redis-data:

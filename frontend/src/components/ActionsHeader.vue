@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from '@/router/routes';
 import { authStore } from '@/stores/auth';
 import { NotesStore} from "@/stores/notes";
 import {computed} from "vue";
@@ -10,7 +11,11 @@ const isLoggedIn = computed(() => {
 })
 
 const addNote = () => { notes.setSelectedNote(null) }
-const logout = () => { auth.logout() }
+const logout = () => { 
+  auth.logout()
+
+  router.push('/')
+}
 
 </script>
 
