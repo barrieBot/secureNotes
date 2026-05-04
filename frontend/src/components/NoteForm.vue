@@ -25,7 +25,7 @@ defineEmits(['saveNote'])
   <input
       class="title-input"
       type="text"
-      placeholder="E"
+      placeholder="Title"
       v-model="title"
   />
   <textarea
