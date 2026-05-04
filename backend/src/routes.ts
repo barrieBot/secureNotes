@@ -4,7 +4,6 @@ import { generateUserHash, decrypt, encrypt } from "./crypto";
 import { EncryptedNote } from "./models/encryptedNote";
 import { addNote, getNote, getNotes } from "./persistence";
 import { auth } from "./auth";
-import './types.d';
 import { NoteDTO } from './models/NoteDTO';
 import { GetNoteDTO } from './models/GetNotDTO';
 import { CreateNoteDTO } from './models/CreateNoteDTO';
@@ -79,12 +78,12 @@ export async function routes(app: FastifyInstance) {
         if (savedNote) {
             const body: CreateNoteDTO = { noteID: savedNote.id, error: null };
             res.status(200).send(body);
+            return savedNote;
         } else {
             const body: CreateNoteDTO = { noteID: undefined, error: 'Problem saving note' };
             res.status(500).send(body);
+            return savedNote;
         }
-
-        return
     });
 
     /* --------------------------------------------------------------------
