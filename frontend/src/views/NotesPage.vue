@@ -4,7 +4,6 @@ import NoteForm from "@/components/NoteForm.vue"
 import NoteView from "@/components/NoteView.vue"
 import SaveNotePopup from "@/components/SaveNotePopup.vue";
 import { NotesStore } from "@/stores/notes";
-import { Note } from "@/types/note";
 import {onBeforeUnmount, onMounted, ref} from "vue";
 import {INoteFormInterface} from "@/types/NoteFormInterface";
 import {ISaveNotePopupInterface} from "@/types/SaveNotePopupInterface";
@@ -51,14 +50,26 @@ onBeforeRouteLeave((to, from, next) => {
 
 /// Save-Note-Dialog
 const onSaveNote = async (password: string) => {
-  const title = noteForm.value.title;
-  const message = noteForm.value.noteMsg;
+  let title: string = "";
+  let message: string = "";
 
+  if (noteForm.value) {
+    title = noteForm.value.title;
+    message = noteForm.value.noteMsg;
+  } else {
+    throw new Error('Form not filled out')
+  }
+
+  showSaveNotePopup.value = false;
 
   const newNote = await notesStore.saveNote(title, message, password);
 
-  noteForm.value.clear();
-  saveNotePopup.value.clear();
+  if(noteForm.value)
+    noteForm.value.clear();
+  
+  if(saveNotePopup.value)
+  saveNotePopup.value.clear()
+
   if(pendingSelectedNoteId.value){
     onPendingNoteSelection();
   } else {
@@ -67,14 +78,20 @@ const onSaveNote = async (password: string) => {
 }
 
 const onDiscardNote = () => {
-  noteForm.value.clear();
-  saveNotePopup.value.clear()
+  if(noteForm.value)
+    noteForm.value.clear();
+  
+  if(saveNotePopup.value)
+    saveNotePopup.value.clear()
+
   onPendingNoteSelection();
 }
 
 const onCancelSaveNote = () => {
   showSaveNotePopup.value = false;
-  saveNotePopup.value.clear()
+  
+  if(saveNotePopup.value)
+    saveNotePopup.value.clear()
 }
 
 /// Select Note from List
