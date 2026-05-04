@@ -1,8 +1,10 @@
-import { defineStore} from "pinia";
+import { defineStore } from "pinia";
 import api from '../utils/api';
-import {encryptionUtils} from "@/utils/crypto";
-import {authStore} from "@/stores/auth";
-import {Note} from "@/types/note"
+import { encryptionUtils } from "@/utils/crypto";
+import { authStore } from "@/stores/auth";
+import { Note } from "@/types/note"
+import { NoteDTO } from "@/types/note_dto";
+import { GetNoteDTO } from "@/types/getNote_dto";
 
 
 export const NotesStore = defineStore('notes', {
@@ -35,11 +37,11 @@ export const NotesStore = defineStore('notes', {
                     'note-key': key_x15k
                 }
             });
-            try {
-                note.decryptedMsg = encryptionUtils.decrypt(response.data.toString(), key_x10k);
-            } catch (e) {
-                throw e;
-            }
+
+            const data = response.data as GetNoteDTO;
+
+            note.title = encryptionUtils.decrypt(data.title, auth.pwd_hash_x2k!)
+            note.decryptedMsg = encryptionUtils.decrypt(data.note, key_x10k);
         },
 
         async saveNote(title: string, text: string, key: string): Promise<Note> {
@@ -47,29 +49,29 @@ export const NotesStore = defineStore('notes', {
             const salt = auth.username
 
             const key_10k = encryptionUtils.keyHashing(key, salt, 10000)
-            const key_15k = encryptionUtils.keyHashing(key, salt, 15000)
 
-            const title_cypher = encryptionUtils.encrypt(title, auth.pwd_hash_x2k!)
-            const note_cypher = encryptionUtils.encrypt(text, key_10k);
+            const noteDTO: NoteDTO = {
+                title_cypher: encryptionUtils.encrypt(title, auth.pwd_hash_x2k!),
+                note_cypher: encryptionUtils.encrypt(text, key_10k),
+                key_hash: encryptionUtils.keyHashing(key, salt, 15000),
+            }
 
-            const response = await api.post(`/notes`, {
-                title_cypher: title_cypher,
-                note_cypher: note_cypher,
-                key_hash: key_15k,
-            })
+            console.log(noteDTO);
+
+            const response = await api.post(`/notes`, noteDTO)
 
             const newNote: Note = {
                 id: response.data.id,
                 title: title,
-                encryptedMsg: note_cypher,
-                decryptedMsg: text
+                decryptedMsg: text,
+                encryptedMsg: noteDTO.note_cypher,
             }
 
             this.notes.push(newNote);
             return newNote;
         },
         setSelectedNote(note: string | null) {
-            if (!note)  {
+            if (!note) {
                 this.selectedNote = null;
                 return
             }
