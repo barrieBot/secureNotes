@@ -58,9 +58,6 @@ export async function routes(app: FastifyInstance) {
         const note = getNote(user, id);
         if (!note) return res.status(404).send({ error: 'Note not found' });
 
-        console.log(note.content)
-
-
         if (user === decrypt(note.sec_hash!, note_key)) {
             const body: GetNoteDTO = {
                 title: note.title,

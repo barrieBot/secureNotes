@@ -11,12 +11,10 @@ export const encryptionUtils = {
     },
 
     encrypt(text: string, key: string) {
-        console.log(`Encryption: ${key} - ${text}`)
         return CryptoJS.AES.encrypt(text, key).toString();
     },
 
     decrypt(text: string, key: string) {
-        console.log(`Decryption: ${key} - ${text}`)
         const decrypt = CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
         if (!decrypt) throw new Error(`${text} is not a valid decryption`);
         return decrypt;

@@ -70,13 +70,11 @@ const onSaveNote = async (password: string) => {
   if(saveNotePopup.value)
   saveNotePopup.value.clear()
 
-if(pendingSelectedNoteId.value){
-  onPendingNoteSelection();
-} else {
-  onNoteSelection(newNote.id);
-}
-console.log('Saved new Note')
-
+  if(pendingSelectedNoteId.value){
+    onPendingNoteSelection();
+  } else {
+    onNoteSelection(newNote.id);
+  }
 }
 
 const onDiscardNote = () => {

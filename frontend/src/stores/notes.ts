@@ -56,8 +56,6 @@ export const NotesStore = defineStore('notes', {
                 key_hash: encryptionUtils.keyHashing(key, salt, 15000),
             }
 
-            console.log(noteDTO);
-
             const response = await api.post(`/notes`, noteDTO)
 
             const newNote: Note = {
