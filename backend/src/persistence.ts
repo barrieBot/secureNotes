@@ -1,8 +1,9 @@
 import { EncryptedNote } from "./models/encryptedNote";
 import { nanoid } from "nanoid";
+import redis from "./redis-client";
 
-/// Remove when DB
-const encryptedNoteStore = new Map<string, EncryptedNote[]>();
+// Key convention: "notes:<user>"
+const userKey = (user: string) => `notes:${user}`
 
 /**
  * Adds a new encrypted note for a specific user.
@@ -14,11 +15,10 @@ const encryptedNoteStore = new Map<string, EncryptedNote[]>();
  * @returns The note object with the newly assigned `id`, or `null` if the
  *   operation fails (currently it always succeeds).
  */
-export function addNote(user: string, note: EncryptedNote): EncryptedNote | null {
+export async function addNote(user: string, note: EncryptedNote): Promise<EncryptedNote | null> {
     note.id = nanoid();
-    const notes = encryptedNoteStore.get(user) || [];
-    notes.push(note);
-    encryptedNoteStore.set(user, notes);
+    await redis.rpush(userKey(user), JSON.stringify(note));
+
     return note;
 }
 
@@ -29,8 +29,9 @@ export function addNote(user: string, note: EncryptedNote): EncryptedNote | null
  * @returns An array of {@link EncryptedNote} objects. If the user has no
  *   notes, an empty array is returned.
  */
-export function getNotes(user: string) {
-    return encryptedNoteStore.get(user) || [];
+export async function getNotes(user: string) {
+    const raw = await redis.lrange(userKey(user), 0, -1);
+    return raw.map((n) => JSON.parse(n) as EncryptedNote)
 }
 
 /**
@@ -41,7 +42,7 @@ export function getNotes(user: string) {
  * @returns The matching {@link EncryptedNote} object, or `null` if no
  *   note with the provided ID exists for the user.
  */
-export function getNote(user: string, noteId: string) {
-    const notes = getNotes(user);
-    return notes.find((n) => n.id === noteId) || null;
+export async function getNote(user: string, noteId: string): Promise<EncryptedNote | null> {
+    const notes = await getNotes(user);
+    return notes.find((n) => n.id === noteId) || null
 }
