@@ -68,7 +68,7 @@ export async function routes(app: FastifyInstance) {
             return res.status(400).send({ error: 'Missing required fields' });
         }
 
-        const savedNote: EncryptedNote | null = addNote(user, {
+        const savedNote: EncryptedNote | null = await addNote(user, {
             owner: user,
             title: submitted_note.title_cypher,
             content: submitted_note.note_cypher,
@@ -98,7 +98,7 @@ export async function routes(app: FastifyInstance) {
      */
     app.get('/notes', { preHandler: auth }, async (req, res) => {
         const user = req.user.user_hash;
-        const notes = getNotes(user);
+        const notes = await getNotes(user);
 
         const noteList = notes.map(note => ({ id: note.id!, title: note.title }));
         return res.status(200).send(noteList);
@@ -132,7 +132,7 @@ export async function routes(app: FastifyInstance) {
 
         if (!user || !note_key) return res.status(400).send({ error: 'Invalid Auth' });
 
-        const note = getNote(user, id);
+        const note = await getNote(user, id);
         if (!note) return res.status(404).send({ error: 'Note not found' });
 
         if (user === decrypt(note.sec_hash!, note_key)) {

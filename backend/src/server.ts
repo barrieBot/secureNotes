@@ -10,9 +10,22 @@ import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
 import fastifyCors from '@fastify/cors';
 import { routes } from './routes';
+import redis from './redis-client';
+
 
 /** Create a Fastify instance with request/response logging enabled. */
 const server = Fastify({ logger: true });
+
+/** Create Signal handlers to properly shut down the application */
+const shutdown = async () => {
+    await server.close();
+    await redis.quit();
+
+    process.exit(0);
+}
+
+process.on("SIGTERM", shutdown)
+process.on("SIGINT", shutdown)
 
 /** Retrieve the JWT secret from environment variables. */
 const JWT_SECRET = process.env.JWT_SECRET;
