@@ -9,17 +9,34 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '9997ef9b-4356-4341-9e63-234716a02f79'
-  imageRepository: 'barriebotsecurenotes'
-  containerRegistry: 'rg4devsecproject.azurecr.io'
-  dockerfileBackendPath: '$(Build.SourcesDirectory)/backend/Dockerfile'
-  dockerfileFrontendPath: '$(Build.SourceDirectory)/frontend/Dockerfile'
-  databaseSourcePath: '$(Build.SourceDirectory)/database'
-  tag: '$(Build.BuildId)'
+# Env
+- group: 'Project-Env'
+- group: 'Project-secrets-Env'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+# Azure Registry 
+- name: dockerRegistryServiceConnection
+  value: 'rg4devSecProject'
+- name: containerRegistry
+  value: 'rg4devsecproject.azurecr.io'
+
+# Source
+- name: imageRepository
+  value: 'barriebotsecurenotes'
+- name: dockerfileBackendPath
+  value: '$(Build.SourcesDirectory)/backend/Dockerfile'
+- name: dockerfileFrontendPath
+  value: '$(Build.SourceDirectory)/frontend/Dockerfile'
+- name: databaseSourcePath
+  value: '$(Build.SourceDirectory)/database'
+
+
+- name: tag
+  value: '$(Build.BuildId)'
+
+
+
+
+
 
 stages:
 - stage: Build
@@ -28,7 +45,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      vmImage: $(vmImageName)
+      vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
       displayName: Build and push Backend-image to container registry
