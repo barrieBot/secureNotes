@@ -51,7 +51,7 @@ stages:
       displayName: Build and push Backend-image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: '$(imageRepository)-backend'
         dockerfile: $(dockerfileBackendPath)
         containerRegistry: $(dockerRegistryServiceConnection)
         arguments: '--target live'
@@ -62,7 +62,7 @@ stages:
       displayName: Build and push Frontend-image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
+        repository: '$(imageRepository)-frontend'
         dockerfile: $(dockerfileFrontendPath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
