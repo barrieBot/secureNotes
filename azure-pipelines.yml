@@ -25,7 +25,7 @@ variables:
 - name: dockerfileBackendPath
   value: '$(Build.SourcesDirectory)/backend/Dockerfile'
 - name: dockerfileFrontendPath
-  value: '$(Build.SourceDirectory)/frontend/Dockerfile'
+  value: '$(Build.SourcesDirectory)/frontend/Dockerfile'
 - name: databaseSourcePath
   value: '$(Build.SourceDirectory)/database'
 
