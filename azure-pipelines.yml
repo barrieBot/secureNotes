@@ -1,0 +1,70 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+# Env
+- group: 'Project-Env'
+- group: 'Project-secrets-Env'
+
+# Azure Registry 
+- name: dockerRegistryServiceConnection
+  value: 'rg4devSecProject'
+- name: containerRegistry
+  value: 'rg4devsecproject.azurecr.io'
+
+# Source
+- name: imageRepository
+  value: 'barriebotsecurenotes'
+- name: dockerfileBackendPath
+  value: '$(Build.SourcesDirectory)/backend/Dockerfile'
+- name: dockerfileFrontendPath
+  value: '$(Build.SourcesDirectory)/frontend/Dockerfile'
+- name: databaseSourcePath
+  value: '$(Build.SourceDirectory)/database'
+
+
+- name: tag
+  value: '$(Build.BuildId)'
+
+
+
+
+
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build and push Backend-image to container registry
+      inputs:
+        command: buildAndPush
+        repository: '$(imageRepository)-backend'
+        dockerfile: $(dockerfileBackendPath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        arguments: '--target live'
+        tags: |
+          $(tag)
+          latest
+    - task: Docker@2
+      displayName: Build and push Frontend-image to container registry
+      inputs:
+        command: buildAndPush
+        repository: '$(imageRepository)-frontend'
+        dockerfile: $(dockerfileFrontendPath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
