@@ -54,8 +54,8 @@ server.register(fastifyJwt, {
 server.register(routes, { prefix: '/api/v1' });
 
 /** Start the Fastify server. */
-const HOST = process.env.HOST || '127.0.0.1';
-const PORT = process.env.PORT || 1234;
+const HOST = process.env.API_HOST || '127.0.0.1';
+const PORT = process.env.API_PORT || 1234;
 const serve = async () => {
     try {
         await server.listen({ host: HOST, port: Number(PORT) });
