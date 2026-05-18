@@ -40,7 +40,7 @@ if (!JWT_SECRET) {
 server.register(fastifyCors, {
     origin:
         process.env.NODE_ENV === 'production'
-            ? 'https://yourdomain.com'
+            ? process.env.FRONTEND_URL
             : true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });

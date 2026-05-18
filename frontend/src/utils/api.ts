@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authStore } from "@/stores/auth";
+import { config } from "@/config/config";
 
 /**
  * Axios instance used for all API requests.
@@ -7,11 +8,10 @@ import { authStore } from "@/stores/auth";
  * The base URL is currently hard‑coded to a local development server.
  * In a production build this should be replaced by an environment variable.
  */
-const BASE_URL = import.meta.env.VITE_BACKEND_URL ?? "http://localhost:1234/api/v1";
-
 const api = axios.create({
-    baseURL: BASE_URL,
+    baseURL: config.BACKEND_API,
 });
+
 /**
  * Request interceptor that injects the JWT token into every outgoing request.
  *
