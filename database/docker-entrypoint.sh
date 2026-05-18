@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+sed -i "s/PLACEHOLDER_PASSWORD/${REDIS_PASSWORD}/g" /usr/local/etc/redis/users.acl
+
+exec redis-server /usr/local/etc/redis/redis.conf

@@ -26,11 +26,17 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS live
 # copy output from the build to default serving dir
 COPY --chown=nginx:nginx --from=builder /app/dist /usr/share/nginx/html
 
+COPY public/config.js.template /tmp/config.js.template
+
 # Copy custom Nginx config 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY docker/entrypoint.sh /entrypoint.sh
 
 # use non root user
 USER nginx
 
 # default nginx container listens at 8080
 EXPOSE 8080
+
+ENTRYPOINT [ "sh", "/entrypoint.sh" ]
