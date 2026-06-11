@@ -122,7 +122,7 @@ const onPendingNoteSelection = () => {
          v-if="notesStore.notes.length > 0"
   >
     <div class="list-header">
-      <h3>Notes</h3>
+      <h2>Notes</h2>
       <button
           class="add-note-button"
           @click="notesStore.setSelectedNote(null) "
@@ -166,6 +166,8 @@ const onPendingNoteSelection = () => {
   display: flex;
   height: 100%;
   overflow: hidden;
+  margin-top: .5rem;
+  padding-bottom: 1.5rem;
 }
 
 .note-list {
@@ -174,6 +176,9 @@ const onPendingNoteSelection = () => {
   flex-direction: column;
   display: flex;
   border-right: 1px solid #4c4c4c;
+  border-top: 1px solid #4c4c4c;
+  border-bottom: 1px solid #4c4c4c;
+  border-radius: 0rem .5rem .5rem .5rem;
 }
 
 .list-header {
@@ -184,7 +189,7 @@ const onPendingNoteSelection = () => {
   padding: 1rem;
 }
 
-.list-header h3{
+.list-header h2{
   color: white;
 }
 
@@ -202,15 +207,30 @@ const onPendingNoteSelection = () => {
   display: flex;
   flex-direction: column;
 
+  border-top: 1px solid #4c4c4c;
+  border-right: 1px solid #4c4c4c;
+  border-bottom: 1px solid #4c4c4c;
+  border-radius: 0rem .5rem .5rem 0rem;
+
+  margin-right: .5rem;
 }
 
 .add-note-button{
   background: none;
-  border: none;
-  outline: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  border-radius: .5rem;
 
   color: white;
   font-size: 1.5rem;
+  min-width: 2rem;
+  min-height:2rem;
+}
+
+.add-note-button:hover { 
+  color: #31b1a4;
+  border-color: #31b1a4;
 }
 
 </style>

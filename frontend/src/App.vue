@@ -27,13 +27,13 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 48px;
+    height: 75px;
     justify-content: center;
   }
 
   main {
     position: absolute;
-    top: 48px;
+    top: 75px;
     left: 0;
     right: 0;
     bottom: 0;
