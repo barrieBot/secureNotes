@@ -41,9 +41,10 @@ async function unlockNote() {
 
     <div class="note-locked"
          v-if="!currentNote?.decryptedMsg">
-      <p>Note locked!</p>
+         <label for="note-password">Note locked!</label>
       <div>
         <input
+            id="note-password"
             type="password"
             class="note-password"
             v-model="notePWD"
@@ -74,8 +75,14 @@ async function unlockNote() {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 2rem;
   box-sizing: border-box;
+  
+  padding-top: 2rem;
+  padding-left: 2rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+
+  color: #31b1a4;
 }
 
 .note-header{
@@ -87,17 +94,46 @@ async function unlockNote() {
 
 .note-title{
   font-size: 3rem;
-  color: #8a8a8a;
+  color: #3bd4c5;
 }
 
 .note-locked{
-  
+  color: white;
 }
 
 .note-password{
+  margin-top: .25rem;
+  font-size: large;
 
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  border-radius: .5rem;
 }
 
+.error-label {
+  color: #cf1919;
+}
 
+button {
+  background: none;
+
+  color: white;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  border-radius: .5rem;
+
+  font-size: large;
+
+  min-width: 6rem;
+  margin-left: 1rem;
+}
+
+button:hover {
+  color: #31b1a4;
+  border-color: #31b1a4;
+}
 
 </style>
