@@ -22,7 +22,7 @@ const logout = () => {
 <template>
 <div class="nav-bar">
   <div class="nav-left">
-    <h3>SecureNotes</h3>
+    <h1>SecureNotes</h1>
   </div>
 
   <div class="nav-right" v-if="isLoggedIn">
@@ -31,7 +31,7 @@ const logout = () => {
         @click="addNote"
     >+</button>
 
-    <p>hi {{auth.username}}</p>
+    <h3>hi {{auth.username}}</h3>
 
     <button class="nav-button"
         @click="logout"
@@ -47,10 +47,11 @@ const logout = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 1.5rem;
   height: 100%;
   background: #2b2b2b;
   color: white;
+  
 }
 
 .nav-left{
@@ -71,6 +72,11 @@ const logout = () => {
   border: 2px solid #2b2b2b;
   border-radius: 5px;
   transition: 0.2s;
+
+  font-size: 1.5rem;
+  min-width: 2rem;
+  min-height:2rem;
+
 }
 
 .nav-button:hover{
@@ -82,5 +88,19 @@ const logout = () => {
   background: #31b1a4;
   color:black;
 }
+
+.add-note-button{
+  background: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  border-radius: .5rem;
+
+  color: white;
+  font-size: 1.5rem;
+  min-width: 2rem;
+  min-height:2rem;
+}
+
 
 </style>
