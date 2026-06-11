@@ -24,7 +24,7 @@ export const NotesStore = defineStore('notes', {
             const response = await api.get('/notes');
             this.notes = response.data.map((n: any) => ({
                 ...n,
-                title: encryptionUtils.encrypt(n.title_cypher, auth.pwd_hash_x2k!)
+                title: encryptionUtils.decrypt(n.title, auth.pwd_hash_x2k!)
             }));
         },
 
@@ -55,7 +55,7 @@ export const NotesStore = defineStore('notes', {
 
             const data = response.data as GetNoteDTO;
 
-            note.title = encryptionUtils.decrypt(data.title, auth.pwd_hash_x2k!)
+            //note.title = encryptionUtils.decrypt(data.title, auth.pwd_hash_x2k!)
             note.decryptedMsg = encryptionUtils.decrypt(data.note, key_x10k);
         },
 
