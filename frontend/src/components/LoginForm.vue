@@ -51,7 +51,7 @@ const login = () => {
     />
     <button
         class="login-button"
-        :disabled="!isValidLogin && !isLoading"
+        :disabled="!isValidLogin"
         @click="login"
     >
       sign in
@@ -73,20 +73,22 @@ const login = () => {
   width: 100%;
   max-width: 350px;
   background: #222222;
-  border: 1px solid #4c4c4c;
+  border: 1px solid #868686;
+  border-radius: 1rem;
 
   padding: 24px;
-
 }
 
 input{
-  border: 1px solid #4c4c4c;
-  background: #222222;
+  border: 1px solid #868686;
+  background: none;
   padding: 0.5rem 1rem;
   margin-inline: 12px;
   margin-top: 6px;
-  color: #4e4e4e;
+  color: #31b1a4;
   font-size: 1rem;
+
+  border-radius: .5rem;
 }
 
 input:focus{
@@ -95,11 +97,26 @@ input:focus{
 
 .login-button{
   color: white;
-  background: #4a4a4a;
-  border: none;
+  background: none;
+  
+  border-style: solid;
+  border-width: 1px;
+  border-color: white;
+  border-radius: .5rem;
+
   padding: 10px;
   margin-inline: 12px;
   margin-top: 24px;
+}
+
+.login-button:disabled {
+  color: #cf1919;
+  border-color: #cf1919;
+}
+
+.login-button:hover:not(:disabled) {
+  color: #31b1a4;
+  border-color: #31b1a4;
 }
 
 </style>
