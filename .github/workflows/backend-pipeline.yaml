@@ -82,9 +82,7 @@ jobs:
         run: npm ci
 
       - name: SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v3
-        with:
-          projectBaseDir: backend
+        run: npm run sonar:scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
