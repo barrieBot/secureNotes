@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "types": "module",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "dev": "dotenv -e ../.env.local -- tsx watch src/server.ts",
     "build": "npm exec tsc",
     "start": "node dist/index.js",
