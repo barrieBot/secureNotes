@@ -24,7 +24,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install Dependecies
@@ -39,11 +39,11 @@ jobs:
         with:
           args: >-
             --severity-threshold=high
-            --sarif-file-output=snyk.sarif
+            --sarif-file-output=backend/snyk.sarif
             --file=backend/package.json
 
       - name: Upload Snyk SARIF To Github Security Tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
           sarif_file: backend/snyk.sarif
@@ -71,7 +71,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
