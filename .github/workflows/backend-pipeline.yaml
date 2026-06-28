@@ -1,0 +1,98 @@
+name: Backend Pipeline
+
+run-name: ${{github.actor}} pushed to main
+
+on:
+  push:
+    branches: [main, production]
+    paths:
+      - "backend/**"
+      - ".github/workflows/**"
+
+jobs:
+  snyk:
+    name: Snyk - Dependecy Scan
+    runs-on: [self-hosted, Linux]
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependecies
+        run: npm ci
+
+      - name: Snyk - Scan open-source dependencies
+        id: snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: >-
+            --severity-threshold=high
+            --sarif-file-output=snyk.sarif
+            --file=backend/package.json
+
+      - name: Upload Snyk SARIF To Github Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: backend/snyk.sarif
+
+      - name: Fail Pipeline on high/critical vulnerabilities found
+        if: steps.snyk.outcome == 'failure'
+        run: |
+          echo "::error::Snyk found high or critical severity vulnerabilities."
+          echo "::error::Check the Security tab for details and fix before merging"
+          exit 1
+
+  sonarqube:
+    name: SonarQube - Static analysis
+    runs-on: [self-hosted, Linux]
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Dependecies
+        run: npm ci
+
+      - name: Generate Test Coverage
+        run: npm run test -- --coverage --coverageReporters=lcov
+        continue-on-error: true
+
+      - name: SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@v3
+        with:
+          projectBaseDir: backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Check SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
