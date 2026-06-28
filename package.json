@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "snyk": "^1.1305.2"
-  },
-  "dependencies": {
-    "@sonar/scan": "^4.3.8"
-  }
-}
