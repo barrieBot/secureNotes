@@ -12,7 +12,7 @@ on:
 
 jobs:
   snyk:
-    name: Linting: Snyk - Dependency Scan
+    name: Linting| Snyk - Dependency Scan
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -61,7 +61,7 @@ jobs:
           exit 1
 
   sonarqube:
-    name: Linting: SonarQube - Static Analysis
+    name: Linting| SonarQube - Static Analysis
     runs-on: ubuntu-22.04
     defaults:
       run:
