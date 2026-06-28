@@ -7,8 +7,8 @@ on:
     branches: [main, production]
     paths:
       include:
-        - backend/**
-        - .github/workflows/**
+        - "backend/**"
+        - ".github/workflows/**"
 
 jobs:
   snyk:
