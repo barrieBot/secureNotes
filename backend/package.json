@@ -10,7 +10,7 @@
     "build": "npm exec tsc",
     "start": "node dist/index.js",
     "snyk:scan": "npx snyk test",
-    "sonar:test": "npx @sonar/scan"
+    "sonar:scan": "npx @sonar/scan"
   },
   "keywords": [],
   "author": "",
