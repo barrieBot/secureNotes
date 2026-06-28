@@ -7,7 +7,9 @@
     "dev": "dotenv -e ../.env.local -- sh entrypoint.sh && vite",
     "dev:test": "dotenv -e ../.env.local -- sh entrypoint.sh",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "snyk:scan": "npx snyk test",
+    "sonar:scan": "npx @sonar/scan"
   },
   "dependencies": {
     "@sonar/scan": "^4.3.8",
