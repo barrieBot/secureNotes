@@ -15,7 +15,7 @@ on:
 jobs:
   snyk:
     name: Snyk - Dependecy Scan
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, Linux]
     defaults:
       run:
         working-directory: backend
@@ -60,7 +60,7 @@ jobs:
 
   sonarqube:
     name: SonarQube - Static analysis
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, Linux]
     defaults:
       run:
         working-directory: backend
