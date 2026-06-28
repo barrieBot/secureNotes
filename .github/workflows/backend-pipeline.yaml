@@ -97,3 +97,38 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  unit-test:
+    name: Test| Run Unit Tests
+    needs: [snyk, sonarqube]
+    runs-on: [self-hosted, Linux]
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: "backend/package-lock.json"
+
+      - name: Install Dependecies
+        run: npm ci
+
+      - name: Execute Unit Tests
+        run: npm run test
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-coverage
+          path: backend/coverage/
+          retention-days: 14
