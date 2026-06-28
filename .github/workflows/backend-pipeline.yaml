@@ -7,10 +7,10 @@ on:
     branches:
       - main
       - production
-  paths:
-    include:
-      - backend/**
-      - .github/workflows/**
+    paths:
+      include:
+        - backend/**
+        - .github/workflows/**
 
 jobs:
   snyk:
