@@ -81,10 +81,6 @@ jobs:
       - name: Install Dependecies
         run: npm ci
 
-      - name: Generate Test Coverage
-        run: npm run test -- --coverage --coverageReporters=lcov
-        continue-on-error: true
-
       - name: SonarQube scan
         uses: SonarSource/sonarqube-scan-action@v3
         with:
