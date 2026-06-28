@@ -160,9 +160,9 @@ jobs:
       - name: Save Docker Backend Image as Tarball
         run: |
           docker save \
-            -t fedil/securenotes-backend:sha-${{ github.sha }} \
-            -t fedil/securenotes-backend:main \
-            -t fedil/securenotes-backend:latest \
+            fedil/securenotes-backend:sha-${{ github.sha }} \
+            fedil/securenotes-backend:main \
+            fedil/securenotes-backend:latest \
             -o securenotes-backend.tar
             
       - name: Upload Backend Image artifacts
