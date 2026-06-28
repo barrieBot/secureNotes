@@ -2,8 +2,10 @@ name: Frontend Pipeline
 run-name: ${{github.actor}} pushed to main
 on:
   push:
-    branches:
-      - main
+    branches: [main, production]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/**"
 
 jobs:
   Lint:
@@ -20,14 +22,14 @@ jobs:
           args: # optional
           # Output a snyk.json file with results if running the test command
           json: # optional
-          
+
       - name: Official SonarQube Scan
         # You may pin to the exact commit or the version.
         # uses: SonarSource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         with:
           # Additional arguments to the Sonar Scanner CLI
-          args: # optional, default is 
+          args: # optional, default is
           # Set the sonar.projectBaseDir analysis property
           projectBaseDir: # optional, default is .
           # Version of the Sonar Scanner CLI to use
@@ -37,20 +39,19 @@ jobs:
           # Skip GPG signature verification (not recommended for security)
           skipSignatureVerification: # optional, default is false
           # Authorization header value to use when downloading the SonarScanner CLI binaries (e.g. 'Bearer mytoken' or 'Basic base64creds'). Use this when scannerBinariesUrl points to a private server that requires authentication.
-          scannerBinariesAuthHeader: # optional, default is 
+          scannerBinariesAuthHeader: # optional, default is
 
-          
   Test:
     runs-on: ubuntu-22.04
     steps:
       - name: Run Jest
-      # You may pin to the exact commit or the version.
-      # uses: stefanoeb/jest-action@f9bb23f509cde20ee9b494f0496d1d3323861cc4
+        # You may pin to the exact commit or the version.
+        # uses: stefanoeb/jest-action@f9bb23f509cde20ee9b494f0496d1d3323861cc4
         uses: stefanoeb/jest-action@1.0.4
         with:
           # Args to jest
           jestArgs: # optional
-          
+
   Build:
     runs-on: ubuntu-22.04
     needs: Test
@@ -86,32 +87,13 @@ jobs:
           cache-binary: # optional, default is true
           # Cleanup temp files and remove builder at the end of a job
           cleanup: # optional, default is true
-                
+
   Release:
     needs: Build
     runs-on: ubuntu-22.04
 
-
-    
   Deploy2EC2:
     runs-on: ubuntu-22.04
 
-
   E2E:
     runs-on: ubuntu-22.04
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
