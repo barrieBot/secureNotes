@@ -4,9 +4,7 @@ run-name: ${{github.actor}} pushed to main
 
 on:
   push:
-    branches:
-      - main
-      - production
+    branches: [main, production]
     paths:
       include:
         - backend/**
