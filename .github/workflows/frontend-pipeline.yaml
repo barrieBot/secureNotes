@@ -1,22 +1,22 @@
-name: Backend Pipeline
+name: Frontend Pipeline
 
-run-name: ${{github.actor}} pushed backend changes to main
+run-name: ${{github.actor}} pushed frontend changes to main
 
 on:
   push:
     branches: [main, production]
     paths:
-      - "backend/**"
+      - "frontend/**"
       - ".github/workflows/**"
   workflow_dispatch:
 
 jobs:
   snyk:
     name: Linting| Snyk - Dependency Scan
-    runs-on: [self-hosted, Linux]
+    runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: backend
+        working-directory: frontend
     permissions:
       contents: read
       security-events: write # required to upload SARIF to the Security tab
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install Dependecies
         run: npm ci
@@ -44,14 +44,14 @@ jobs:
         with:
           args: >-
             --severity-threshold=high
-            --sarif-file-output=backend/snyk.sarif
-            --file=backend/package.json
+            --sarif-file-output=frontend/snyk.sarif
+            --file=frontend/package.json
 
       - name: Upload Snyk SARIF To Github Security Tab
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: backend/snyk.sarif
+          sarif_file: frontend/snyk.sarif
 
       - name: Fail Pipeline on high/critical vulnerabilities found
         if: steps.snyk.outcome == 'failure'
@@ -62,10 +62,10 @@ jobs:
 
   sonarqube:
     name: Linting| SonarQube - Static Analysis
-    runs-on: [self-hosted, Linux]
+    runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: backend
+        working-directory: frontend
 
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
-          cache-dependency-path: backend/package-lock.json
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install Dependecies
         run: npm ci
@@ -92,7 +92,7 @@ jobs:
       - name: Check SonarQube Quality Gate
         uses: SonarSource/sonarqube-quality-gate-action@v1
         with:
-          scanMetadataReportFile: backend/.scannerwork/report-task.txt
+          scanMetadataReportFile: frontend/.scannerwork/report-task.txt
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
