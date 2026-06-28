@@ -1,11 +1,105 @@
 name: Backend Pipeline
+
 run-name: ${{github.actor}} pushed to main
+
 on:
   push:
     branches:
       - main
+      - production
+  paths:
+    include:
+      - backend/**
+      - .github/workflows/**
 
 jobs:
+  snyk:
+    name: Snyk - Dependecy Scan
+    runs-on: [self-hosted, linux]
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependecies
+        run: npm ci
+
+      - name: Snyk - Scan open-source dependencies
+        id: snyk
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: >-
+            --severity-threshold=high
+            --sarif-file-output=snyk.sarif
+            --file=backend/package.json
+
+      - name: Upload Snyk SARIF To Github Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: backend/snyk.sarif
+
+      - name: Fail Pipeline on high/critical vulnerabilities found
+        if: steps.snyk.outcome == 'failure'
+        run: |
+          echo "::error::Snyk found high or critical severity vulnerabilities."
+          echo "::error::Check the Security tab for details and fix before merging"
+          exit 1
+
+  sonarqube:
+    name: SonarQube - Static analysis
+    runs-on: [self-hosted, linux]
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install Dependecies
+        run: npm ci
+
+      - name: Generate Test Coverage
+        run: npm run test -- --coverage --coverageReporters=lcov
+        continue-on-error: true
+
+      - name: SonarQube scan
+        uses: SonarSource/sonarqube-scan-action@v3
+        with:
+          projectBaseDir: backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Check SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
   Lint:
     runs-on: ubuntu-22.04
     steps:
@@ -20,14 +114,14 @@ jobs:
           args: # optional
           # Output a snyk.json file with results if running the test command
           json: # optional
-          
+
       - name: Official SonarQube Scan
         # You may pin to the exact commit or the version.
         # uses: SonarSource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         with:
           # Additional arguments to the Sonar Scanner CLI
-          args: # optional, default is 
+          args: # optional, default is
           # Set the sonar.projectBaseDir analysis property
           projectBaseDir: # optional, default is .
           # Version of the Sonar Scanner CLI to use
@@ -37,20 +131,19 @@ jobs:
           # Skip GPG signature verification (not recommended for security)
           skipSignatureVerification: # optional, default is false
           # Authorization header value to use when downloading the SonarScanner CLI binaries (e.g. 'Bearer mytoken' or 'Basic base64creds'). Use this when scannerBinariesUrl points to a private server that requires authentication.
-          scannerBinariesAuthHeader: # optional, default is 
+          scannerBinariesAuthHeader: # optional, default is
 
-          
   Test:
     runs-on: ubuntu-22.04
     steps:
       - name: Run Jest
-      # You may pin to the exact commit or the version.
-      # uses: stefanoeb/jest-action@f9bb23f509cde20ee9b494f0496d1d3323861cc4
+        # You may pin to the exact commit or the version.
+        # uses: stefanoeb/jest-action@f9bb23f509cde20ee9b494f0496d1d3323861cc4
         uses: stefanoeb/jest-action@1.0.4
         with:
           # Args to jest
           jestArgs: # optional
-          
+
   Build:
     runs-on: ubuntu-22.04
     needs: Test
@@ -86,32 +179,13 @@ jobs:
           cache-binary: # optional, default is true
           # Cleanup temp files and remove builder at the end of a job
           cleanup: # optional, default is true
-                
+
   Release:
     needs: Build
     runs-on: ubuntu-22.04
 
-
-    
   Deploy2EC2:
     runs-on: ubuntu-22.04
 
-
   E2E:
     runs-on: ubuntu-22.04
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
