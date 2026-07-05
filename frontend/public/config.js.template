@@ -1,3 +1,0 @@
-window.__ENV__ = {
-    BACKEND_API: "${BACKEND_API}",
-};
