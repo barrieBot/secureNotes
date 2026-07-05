@@ -57,7 +57,6 @@ defineEmits(['saveNote'])
   padding-left: 2rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
-
 }
 
 .title-input{
@@ -65,10 +64,9 @@ defineEmits(['saveNote'])
   border: none;
   outline: none;
   margin-bottom: 1.5rem;
-  color: white;
+  color: var(--app-text);
   background: none;
 }
-
 
 .note-input{
   font-size: 1.2rem;
@@ -78,25 +76,24 @@ defineEmits(['saveNote'])
   border: none;
   outline: none;
   margin-bottom: 24px;
-  color: #c0c0c0;
+  color: var(--app-muted-text);
 }
 
 .actions{
   display: flex;
   justify-content: flex-end;
-
 }
 
 .save-button{
   border: none;
   outline: none;
   background: none;
-  color: white;
+  color: var(--app-text);
   padding: 1rem 4rem;
 
   border-style: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: var(--app-border);
   border-radius: .5rem;
 }
 
@@ -106,12 +103,11 @@ defineEmits(['saveNote'])
 }
 
 .save-button:hover:not(:disabled){
-  color: #31b1a4;
-  border-color: #31b1a4;
+  color: var(--app-accent);
+  border-color: var(--app-accent);
 }
 
 .save-button:active:not(:disabled){
-  background: #31b1a4;
+  background: var(--app-accent);
 }
-
 </style>

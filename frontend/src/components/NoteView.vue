@@ -82,7 +82,7 @@ async function unlockNote() {
   padding-right: 1rem;
   padding-bottom: 1rem;
 
-  color: #31b1a4;
+  color: var(--app-accent);
 }
 
 .note-header{
@@ -94,21 +94,28 @@ async function unlockNote() {
 
 .note-title{
   font-size: 3rem;
-  color: #3bd4c5;
+  color: var(--app-accent);
 }
 
 .note-locked{
-  color: white;
+  color: var(--app-text);
 }
 
 .note-password{
   margin-top: .25rem;
   font-size: large;
 
+  color: var(--app-text);
+  background: var(--app-surface);
+
   border-style: solid;
   border-width: 1px;
-  border-color: black;
+  border-color: var(--app-border);
   border-radius: .5rem;
+}
+
+.note-text {
+  color: var(--app-text);
 }
 
 .error-label {
@@ -118,11 +125,11 @@ async function unlockNote() {
 button {
   background: none;
 
-  color: white;
+  color: var(--app-text);
 
   border-style: solid;
   border-width: 1px;
-  border-color: white;
+  border-color: var(--app-border);
   border-radius: .5rem;
 
   font-size: large;
@@ -132,8 +139,8 @@ button {
 }
 
 button:hover {
-  color: #31b1a4;
-  border-color: #31b1a4;
+  color: var(--app-accent);
+  border-color: var(--app-accent);
 }
 
 </style>
