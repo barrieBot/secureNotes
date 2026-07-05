@@ -4,7 +4,10 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from "@/router/routes.ts";
+import { initPostHog } from '@/utils/posthog'
 
+
+initPostHog()
 
 const app = createApp(App)
 const pinia = createPinia()

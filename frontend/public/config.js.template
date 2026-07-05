@@ -1,3 +1,5 @@
 window.__ENV__ = {
     BACKEND_API: "${BACKEND_API}",
+    POSTHOG_KEY: "${POSTHOG_KEY}",
+    POSTHOG_HOST: "${POSTHOG_HOST}",
 };
