@@ -10,6 +10,7 @@ pipeline {
 
     tools {
         nodejs 'node22'
+        docker 'docker-plugin'
     }
 
     options {
@@ -22,7 +23,7 @@ pipeline {
         IMAGE_MAIN_TAG = 'main'
         IMAGE_LATEST_TAG = 'latest'
         // TODO: Set to true once the Jenkins SonarQube webhook/quality gate is configured.
-        ENABLE_SONAR_QUALITY_GATE = 'false'
+        ENABLE_SONAR_QUALITY_GATE = 'true'
     }
 
     stages {
