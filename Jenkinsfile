@@ -28,6 +28,11 @@ pipeline {
     stages {
         stage('Checkout') {
             when {
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
 
@@ -48,7 +53,12 @@ pipeline {
         }
 
         stage('Install | Backend Dependencies') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
 
@@ -60,6 +70,15 @@ pipeline {
         }
 
         stage('Linting | Snyk Dependency Scan') {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
+                changeset "backend/**"
+            }
+
             steps {
                 withCredentials([
                     string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')
@@ -83,7 +102,12 @@ pipeline {
         }
 
         stage('Linting | SonarQube Static Analysis') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
             
@@ -100,7 +124,12 @@ pipeline {
         }
 
         stage('Linting | SonarQube Quality Gate') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
             
@@ -118,7 +147,12 @@ pipeline {
         }
 
         stage('Test | Run Unit Tests') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
             steps {
@@ -135,7 +169,12 @@ pipeline {
         }
 
         stage('Build | Backend Application') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
             
@@ -147,7 +186,12 @@ pipeline {
         }
 
         stage('Build | Backend Docker Image') {
-            when {
+            when {                
+                anyOf {
+                    branch 'main'
+                    branch 'production'
+                }
+
                 changeset "backend/**"
             }
             
@@ -164,10 +208,10 @@ pipeline {
         }
 
         stage('Deliver | Push Backend Image to DockerHub') {
-            when {
+            when {                
                 allOf {
                     branch 'production'
-    
+
                     changeset "backend/**"
                 }
             }
