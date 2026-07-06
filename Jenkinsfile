@@ -137,6 +137,10 @@ pipeline {
         }
 
         stage('Deliver | Push Backend Image to DockerHub') {
+            when {
+                branch 'production'
+            }
+
             steps {
                 withCredentials([
                     usernamePassword(
@@ -166,6 +170,10 @@ pipeline {
 
         // TODO: Replace this placeholder with the blue/green deployment command once finalized.
         stage('Deploy | Blue-Green') {
+            when {
+                branch 'production'
+            }
+
             steps {
                 echo "Deployment stage pending blue/green integration."
                 echo "Backend image available: ${IMAGE_REPO}:${IMAGE_SHA_TAG}"
