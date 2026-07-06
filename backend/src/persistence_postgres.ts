@@ -1,6 +1,5 @@
 import { EncryptedNote } from "./models/encryptedNote";
 import { nanoid } from "nanoid";
-import postgres from "./pg-client"
 import pool from "./pg-client";
 
 
@@ -31,10 +30,10 @@ export async function addNote(user: string, note: EncryptedNote): Promise<Encryp
 
     const values = [note.id, user, note.title, note.content, note.sec_hash || null];
 
-    try{
+    try {
         await pool.query(pps, values)
         return note;
-    } catch (error){
+    } catch (error) {
         /// Console? 
         return null
     }
@@ -50,7 +49,7 @@ export async function addNote(user: string, note: EncryptedNote): Promise<Encryp
 export async function getNotes(user: string) {
     const pps = `
         SELECT id, owner, title, content, sec_hash
-        FROM encrypted_notes
+        FROM notes
         WHERE owner = $1;
     `;
 
@@ -75,7 +74,7 @@ export async function getNotes(user: string) {
 export async function getNote(user: string, noteId: string): Promise<EncryptedNote | null> {
     const pps = `
         SELECT id, owner, title, content, sec_hash
-        FROM encrypted_notes
+        FROM notes
         WHERE owner = $1 AND id = $2;
     `;
 
