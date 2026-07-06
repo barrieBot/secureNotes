@@ -166,6 +166,7 @@ jobs:
 
   deliver:
     name: Deliver | Push Frontend-img to DockerHub
+    if: github.ref == 'refs/heads/production'
     needs: [build]
 
     runs-on: ubuntu-22.04
@@ -197,6 +198,7 @@ jobs:
 
   stage:
     runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/production'
     needs: [deliver]
 
     steps:
@@ -242,6 +244,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
+    if: github.ref == 'refs/heads/production'
     needs: [stage]
 
     steps:
