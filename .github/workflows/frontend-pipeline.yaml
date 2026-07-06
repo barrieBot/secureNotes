@@ -261,7 +261,7 @@ jobs:
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "${{ vars.EC2_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["sudo -u ubuntu -i -- bash -c \"cd /home/ubuntu/deployment && ./blue-green-deploy.sh promote --service frontend""]' \
+            --parameters 'commands=["sudo -u ubuntu -i -- bash -c \"cd /home/ubuntu/deployment && ./blue-green-deploy.sh promote --service frontend\""]' \
             --query "Command.CommandId" --output text)
 
           aws ssm wait command-executed \
