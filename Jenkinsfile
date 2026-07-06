@@ -28,12 +28,14 @@ pipeline {
     stages {
         stage('Checkout') {
             when {
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
 
             steps {
@@ -53,13 +55,15 @@ pipeline {
         }
 
         stage('Install | Backend Dependencies') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
 
             steps {
@@ -70,13 +74,15 @@ pipeline {
         }
 
         stage('Linting | Snyk Dependency Scan') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
 
             steps {
@@ -102,15 +108,17 @@ pipeline {
         }
 
         stage('Linting | SonarQube Static Analysis') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
-            
+
             steps {
                 withCredentials([
                     string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN'),
@@ -124,15 +132,17 @@ pipeline {
         }
 
         stage('Linting | SonarQube Quality Gate') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
-            
+
             steps {
                 script {
                     if (env.ENABLE_SONAR_QUALITY_GATE == 'true') {
@@ -147,14 +157,17 @@ pipeline {
         }
 
         stage('Test | Run Unit Tests') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
+            
             steps {
                 dir('backend') {
                     sh 'npm run test'
@@ -169,15 +182,17 @@ pipeline {
         }
 
         stage('Build | Backend Application') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
-            
+
             steps {
                 dir('backend') {
                     sh 'npm run build'
@@ -186,15 +201,17 @@ pipeline {
         }
 
         stage('Build | Backend Docker Image') {
-            when {                
-                anyOf {
-                    branch 'main'
-                    branch 'production'
-                }
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
 
-                changeset "backend/**"
+                    changeset "backend/**"
+                }
             }
-            
+                        
             steps {
                 sh '''
                     docker build \
