@@ -125,7 +125,8 @@ render_nginx() {
     envsubst '${ACTIVE_API_UPSTREAM} ${IDLE_API_UPSTREAM} ${ACTIVE_FRONTEND_UPSTREAM} ${IDLE_FRONTEND_UPSTREAM}' \
     < "$NGINX_TEMPLATE" > "${NGINX_CONF}.new"
 
-  mv "${NGINX_CONF}.new" "$NGINX_CONF"
+  cp "${NGINX_CONF}.new" ./nginx/"$NGINX_CONF"
+  rm "${NGINX_CONF}.new"
 
   # reload the nginx.conf to change traffic to the new deployment
   if ! $DC exec -T "$NGINX_SERVICE" nginx -t; then
