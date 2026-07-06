@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import pool from "./pg-client";
 
 
-// close the db connection
+// close the db connection for proper clean up
 export async function closeDB() {
     await pool.end();
     /// Console 

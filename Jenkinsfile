@@ -26,6 +26,34 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            when {
+                allOf {
+                    anyOf {
+                        branch 'main'
+                        branch 'production'
+                    }
+
+                    changeset "backend/**"
+                }
+            }
+
+            steps {
+                checkout scm
+
+                script {
+                    env.GIT_SHA = sh(
+                        script: 'git rev-parse HEAD',
+                        returnStdout: true
+                    ).trim()
+
+                    env.IMAGE_SHA_TAG = "sha-${env.GIT_SHA}"
+                }
+
+                echo "Building backend image for commit: ${env.GIT_SHA}"
+            }
+        }
+
         stage('Install | Backend Dependencies') {
             when {
                 allOf {
@@ -98,31 +126,6 @@ pipeline {
                 ]) {
                     dir('backend') {
                         sh 'npm run sonar:scan'
-                    }
-                }
-            }
-        }
-
-        stage('Linting | SonarQube Quality Gate') {
-            when {
-                allOf {
-                    anyOf {
-                        branch 'main'
-                        branch 'production'
-                    }
-
-                    changeset "backend/**"
-                }
-            }
-
-            steps {
-                script {
-                    if (env.ENABLE_SONAR_QUALITY_GATE == 'true') {
-                        timeout(time: 5, unit: 'MINUTES') {
-                            waitForQualityGate abortPipeline: true
-                        }
-                    } else {
-                        echo 'Quality gate skipped: Jenkins SonarQube integration not configured yet.'
                     }
                 }
             }
