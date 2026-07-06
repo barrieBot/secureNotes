@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenv -e ../.env.local -- sh entrypoint.sh && vite",
+    "dev": "dotenv -e ../.env.local -- vite",
     "dev:test": "dotenv -e ../.env.local -- sh entrypoint.sh",
     "build": "vite build",
     "preview": "vite preview",
