@@ -27,6 +27,10 @@ pipeline {
 
     stages {
         stage('Checkout') {
+            when {
+                changeset "backend/**"
+            }
+
             steps {
                 checkout scm
 
@@ -44,6 +48,10 @@ pipeline {
         }
 
         stage('Install | Backend Dependencies') {
+            when {
+                changeset "backend/**"
+            }
+
             steps {
                 dir('backend') {
                     sh 'npm ci'
@@ -75,6 +83,10 @@ pipeline {
         }
 
         stage('Linting | SonarQube Static Analysis') {
+            when {
+                changeset "backend/**"
+            }
+            
             steps {
                 withCredentials([
                     string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN'),
@@ -88,6 +100,10 @@ pipeline {
         }
 
         stage('Linting | SonarQube Quality Gate') {
+            when {
+                changeset "backend/**"
+            }
+            
             steps {
                 script {
                     if (env.ENABLE_SONAR_QUALITY_GATE == 'true') {
@@ -102,6 +118,9 @@ pipeline {
         }
 
         stage('Test | Run Unit Tests') {
+            when {
+                changeset "backend/**"
+            }
             steps {
                 dir('backend') {
                     sh 'npm run test'
@@ -116,6 +135,10 @@ pipeline {
         }
 
         stage('Build | Backend Application') {
+            when {
+                changeset "backend/**"
+            }
+            
             steps {
                 dir('backend') {
                     sh 'npm run build'
@@ -124,6 +147,10 @@ pipeline {
         }
 
         stage('Build | Backend Docker Image') {
+            when {
+                changeset "backend/**"
+            }
+            
             steps {
                 sh '''
                     docker build \
@@ -137,9 +164,13 @@ pipeline {
         }
 
         stage('Deliver | Push Backend Image to DockerHub') {
-            //when {
-            //    branch 'production'
-            //}
+            when {
+                allOf {
+                    branch 'production'
+    
+                    changeset "backend/**"
+                }
+            }
 
             steps {
                 withCredentials([
@@ -169,14 +200,40 @@ pipeline {
         }
 
         // TODO: Replace this placeholder with the blue/green deployment command once finalized.
+        stage('Stage | Blue-Green') {
+            when {
+                allOf {
+                    branch 'production'
+    
+                    changeset "backend/**"
+                }
+            }
+            steps {
+                sshagent(credentials: ['ec2-deploy']) {
+                    sh '''
+                        ssh ubuntu@10.0.0.12 '
+                            cd deployment &&
+                            ./blue-green-deploy.sh stage --service api ${IMAGE_SHA_TAG}
+                        '
+                    '''
+                }
+            }
+        }
+
         stage('Deploy | Blue-Green') {
             when {
                 branch 'production'
             }
 
             steps {
-                echo "Deployment stage pending blue/green integration."
-                echo "Backend image available: ${IMAGE_REPO}:${IMAGE_SHA_TAG}"
+                sshagent(credentials: ['ec2-deploy']) {
+                    sh '''
+                        ssh ubuntu@10.0.0.12 '
+                            cd deployment &&
+                            ./blue-green-deploy.sh promote --service api
+                        '
+                    '''
+                }
             }
         }
     }
