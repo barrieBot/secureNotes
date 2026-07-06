@@ -10,7 +10,6 @@ pipeline {
 
     tools {
         nodejs 'node22'
-        docker 'docker-plugin'
     }
 
     options {
