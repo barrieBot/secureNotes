@@ -1,19 +1,17 @@
 import posthog from 'posthog-js'
 
-import { config } from '@/config/config'
-
 export const THEME_FLAG_KEY = 'secret-notes-theme'
 
 export type ThemeVariant = 'light' | 'dark'
 
 export function initPostHog(): boolean {
-    if (!config.POSTHOG_KEY) {
+    if (!import.meta.env.VITE_POSTHOG_KEY) {
         console.warn('PostHog is not configured. Theme experiment will use the light theme fallback.')
         return false
     }
 
-    posthog.init(config.POSTHOG_KEY, {
-        api_host: config.POSTHOG_HOST,
+    posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
+        api_host: import.meta.env.VITE_POSTHOG_HOST,
         defaults: '2025-05-24',
         capture_pageview: true,
     })
@@ -32,7 +30,7 @@ export function getThemeVariant(): ThemeVariant {
 }
 
 export function onThemeVariantLoaded(callback: (variant: ThemeVariant) => void): void {
-    if (!config.POSTHOG_KEY) {
+    if (!import.meta.env.VITE_POSTHOG_KEY) {
         callback('light')
         return
     }
@@ -43,7 +41,7 @@ export function onThemeVariantLoaded(callback: (variant: ThemeVariant) => void):
 }
 
 export function captureThemeVariantApplied(variant: ThemeVariant): void {
-    if (!config.POSTHOG_KEY) {
+    if (!import.meta.env.VITE_POSTHOG_KEY) {
         return
     }
 
