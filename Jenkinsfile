@@ -137,9 +137,9 @@ pipeline {
         }
 
         stage('Deliver | Push Backend Image to DockerHub') {
-            when {
-                branch 'production'
-            }
+            //when {
+            //    branch 'production'
+            //}
 
             steps {
                 withCredentials([
