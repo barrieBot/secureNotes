@@ -246,12 +246,12 @@ pipeline {
             }
             steps {
                 sshagent(credentials: ['ec2-deploy']) {
-                    sh '''
-                        ssh ubuntu@10.0.0.12 '
+                    sh """
+                        ssh ubuntu@10.0.0.12 "
                             cd deployment &&
                             ./blue-green-deploy.sh stage --service api ${IMAGE_SHA_TAG}
-                        '
-                    '''
+                        "
+                    """
                 }
             }
         }
