@@ -26,34 +26,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            when {
-                allOf {
-                    anyOf {
-                        branch 'main'
-                        branch 'production'
-                    }
-
-                    changeset "backend/**"
-                }
-            }
-
-            steps {
-                checkout scm
-
-                script {
-                    env.GIT_SHA = sh(
-                        script: 'git rev-parse HEAD',
-                        returnStdout: true
-                    ).trim()
-
-                    env.IMAGE_SHA_TAG = "sha-${env.GIT_SHA}"
-                }
-
-                echo "Building backend image for commit: ${env.GIT_SHA}"
-            }
-        }
-
         stage('Install | Backend Dependencies') {
             when {
                 allOf {
