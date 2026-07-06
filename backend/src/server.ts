@@ -10,7 +10,7 @@ import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
 import fastifyCors from '@fastify/cors';
 import { routes } from './routes';
-import redis from './redis-client';
+import { closeDB } from './persistence'
 
 
 /** Create a Fastify instance with request/response logging enabled. */
@@ -19,7 +19,12 @@ const server = Fastify({ logger: true });
 /** Create Signal handlers to properly shut down the application */
 const shutdown = async () => {
     await server.close();
-    await redis.quit();
+    try {
+        await closeDB();
+    } catch (error) {
+        ///Console error?
+
+    }
 
     process.exit(0);
 }

@@ -1,14 +1,16 @@
 import { EncryptedNote } from "./models/encryptedNote";
 import { nanoid } from "nanoid";
-import postgres from "./pg-client"
-import pool from "./pg-client";
+import redis from "./redis-client";
 
 
-
-export async function closeDB() {
-    await pool.end();
-    /// Console 
+export async function closeDB(){
+    await redis.quit();
+    /// Console?
 }
+
+
+// Key convention: "notes:<user>"
+const userKey = (user: string) => `notes:${user}`
 
 /**
  * Adds a new encrypted note for a specific user.
@@ -22,22 +24,9 @@ export async function closeDB() {
  */
 export async function addNote(user: string, note: EncryptedNote): Promise<EncryptedNote | null> {
     note.id = nanoid();
+    await redis.rpush(userKey(user), JSON.stringify(note));
 
-    const pps = `
-        INSERT INTO notes (id, owner, title, content, sec_hash) 
-        VALUES($1, $2, $3, $4, $5)
-        RETURNING *;
-    `;
-
-    const values = [note.id, user, note.title, note.content, note.sec_hash || null];
-
-    try{
-        await pool.query(pps, values)
-        return note;
-    } catch (error){
-        /// Console? 
-        return null
-    }
+    return note;
 }
 
 /**
@@ -48,20 +37,8 @@ export async function addNote(user: string, note: EncryptedNote): Promise<Encryp
  *   notes, an empty array is returned.
  */
 export async function getNotes(user: string) {
-    const pps = `
-        SELECT id, owner, title, content, sec_hash
-        FROM encrypted_notes
-        WHERE owner = $1;
-    `;
-
-    try {
-        const found_notes = await pool.query(pps, [user]);
-        return found_notes.rows as EncryptedNote[];
-    } catch (Error) {
-        /// console?
-        return [];
-    }
-
+    const raw = await redis.lrange(userKey(user), 0, -1);
+    return raw.map((n) => JSON.parse(n) as EncryptedNote)
 }
 
 /**
@@ -73,19 +50,6 @@ export async function getNotes(user: string) {
  *   note with the provided ID exists for the user.
  */
 export async function getNote(user: string, noteId: string): Promise<EncryptedNote | null> {
-    const pps = `
-        SELECT id, owner, title, content, sec_hash
-        FROM encrypted_notes
-        WHERE owner = $1 AND id = $2;
-    `;
-
-    try {
-        const found_notes = await pool.query(pps, [user, noteId]);
-        return (found_notes.rows[0] as EncryptedNote) || null;
-    } catch (Error) {
-        /// console?
-        return null;
-    }
-
-
+    const notes = await getNotes(user);
+    return notes.find((n) => n.id === noteId) || null
 }
