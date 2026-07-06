@@ -8,6 +8,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'node26'
+    }
+
     options {
         timestamps()
         disableConcurrentBuilds()
