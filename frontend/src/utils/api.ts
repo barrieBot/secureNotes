@@ -1,6 +1,5 @@
 import axios from "axios";
 import { authStore } from "@/stores/auth";
-import { config } from "@/config/config";
 
 /**
  * Axios instance used for all API requests.
@@ -9,7 +8,7 @@ import { config } from "@/config/config";
  * In a production build this should be replaced by an environment variable.
  */
 const api = axios.create({
-    baseURL: config.BACKEND_API,
+    baseURL: import.meta.env.VITE_API_URL,
 });
 
 /**

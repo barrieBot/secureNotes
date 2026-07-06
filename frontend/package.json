@@ -4,24 +4,41 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "dotenv -e ../.env.local -- sh entrypoint.sh && vite",
+    "dev": "dotenv -e ../.env.local -- vite",
     "dev:test": "dotenv -e ../.env.local -- sh entrypoint.sh",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "snyk:scan": "npx snyk test",
+    "sonar:scan": "npx @sonar/scan",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --runInBand"
   },
   "dependencies": {
-    "axios": "^1.14.0",
+    "@sonar/scan": "^4.3.8",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "axios": "^1.18.1",
     "crypto-js": "^4.2.0",
     "dotenv-cli": "^11.0.0",
     "pinia": "^3.0.4",
+    "posthog-js": "^1.396.6",
+    "vite": "^8.1.0",
     "vue": "^3.5.31",
-    "vue-router": "^4.6.4",
-    "@vitejs/plugin-vue": "^6.0.5",
-    "vite": "^8.0.13"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
     "@types/crypto-js": "^4.2.2",
-    "vite-plugin-vue-devtools": "^8.1.1"
+    "@vue/test-utils": "^2.4.6",
+    "@vue/vue3-jest": "^29.2.6",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "snyk": "^1.1305.2",
+    "typescript": "^5.9.3",
+    "vite-plugin-vue-devtools": "^8.1.5"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

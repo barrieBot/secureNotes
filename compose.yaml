@@ -1,44 +1,68 @@
 services:
-
-  server:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-      target: live
-    ports:
-      - ${PORT}:${PORT}
-    env_file:
-      - .env
-    depends_on:
-      - redis
-
-  web:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      target: live
-    ports:
-      - ${EXPOSED_PORT}:8080
-    env_file:
-      - .env
-    depends_on:
-      - server
-
-  redis:
-    image: redis:8
+  database:
+    image: postgres:17.4-alpine3.21
     restart: unless-stopped
-    ports:
-      - 6379:6379
+    env_file:
+      - .env
+    volumes:
+      - secure_notes_data:/var/lib/postgresql/data
+      - ./database_postgres:/docker-entrypoint-initdb.d
     logging:
       driver: 'json-file'
       options:
         max-size: '10m'
         max-file: '3'
+    
+  api-0:
+    image: ${IMAGE_REPO}/securenotes-backend:${API_VERSION_0}
+    depends_on:
+      - database
+    env_file:
+      - .env
+
+
+  api-1:
+    image: ${IMAGE_REPO}/securenotes-backend:${API_VERSION_1}
+    depends_on:
+      - database
+    env_file:
+      - .env
+    
+  frontend-0:
+    image: ${IMAGE_REPO}/securenotes-frontend:${FRONTEND_VERSION_0}
+    env_file:
+      - .env
+    
+  
+  frontend-1:
+    image: ${IMAGE_REPO}/securenotes-frontend:${FRONTEND_VERSION_1}
+    env_file:
+      - .env
+    
+  nginx:
+    image: nginx:1.27.4-perl
+    ports:
+      - 80:80
+      - 81:81
+    depends_on:
+      - api-0
+      - api-1
+      - frontend-0
+      - frontend-1
+    env_file:
+      - .env
     volumes:
-      - redis-data:/data
-      - ./database/redis.conf:/usr/local/etc/redis/redis.conf
-      - ./database/users.acl:/usr/local/etc/redis/users.acl
-    entrypoint: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+      - ./nginx:/etc/nginx/
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '3'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8787:8080
 
 volumes:
-  redis-data:
+  secure_notes_data:

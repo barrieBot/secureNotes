@@ -26,7 +26,7 @@ describe('generateUserHash', () => {
         expectHex64(hash);
     });
 
-    it('cery long password (10000 chars', () => {
+    it('very long password (10000 chars', () => {
         // arrange
         const longPass = 'a'.repeat(10_000);
 

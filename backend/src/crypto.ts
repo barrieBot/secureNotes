@@ -34,7 +34,16 @@ export function encrypt(text: string, key: string) {
  * @returns The original plaintext string, or `null` if decryption fails.
  */
 export function decrypt(text: string, key: string) {
-    const decrypt: string = CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
-    if (!decrypt) return null;
-    return decrypt;
+    try {
+        const bytes = CryptoJS.AES.decrypt(text, key);
+        const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+
+        if (!plaintext) {
+            return null;
+        }
+
+        return plaintext;
+    } catch (err) {
+        return null;
+    }
 }
