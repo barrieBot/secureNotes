@@ -19,10 +19,12 @@
     "@fastify/cors": "^11.2.0",
     "@fastify/jwt": "^10.1.0",
     "@sonar/scan": "^4.3.8",
+    "@types/k6": "^2.0.0",
     "crypto-js": "^4.2.0",
     "dotenv": "^17.4.2",
     "fastify": "^5.9.0",
     "ioredis": "^5.11.1",
+    "k6": "^0.0.0",
     "nanoid": "^5.1.16",
     "pg": "^8.22.0"
   },
