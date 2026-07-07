@@ -266,12 +266,12 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-deploy']) {
                     sh """
-                        -o StrictHostKeyChecking=accept-new \
-                        -o BatchMode=yes \
-                        -o ConnectTimeout=10 \
-                        ssh ubuntu@10.0.0.12 "
-                            cd deployment && \
-                            ./blue-green-deploy.sh stage --service api ${IMAGE_SHA_TAG}
+                        ssh -o StrictHostKeyChecking=accept-new \
+                            -o BatchMode=yes \
+                            -o ConnectTimeout=10 \
+                            ubuntu@10.0.0.12 "
+                                cd deployment && \
+                                ./blue-green-deploy.sh stage --service api ${IMAGE_SHA_TAG}
                         "
                     """
                 }
@@ -291,12 +291,12 @@ pipeline {
             steps {
                 sshagent(credentials: ['ec2-deploy']) {
                     sh '''
-                        -o StrictHostKeyChecking=accept-new \
-                        -o BatchMode=yes \
-                        -o ConnectTimeout=10 \
-                        ssh ubuntu@10.0.0.12 '
-                            cd deployment && \
-                            ./blue-green-deploy.sh promote --service api
+                        ssh -o StrictHostKeyChecking=accept-new \
+                            -o BatchMode=yes \
+                            -o ConnectTimeout=10 \
+                            ubuntu@10.0.0.12 '
+                                cd deployment && \
+                                ./blue-green-deploy.sh promote --service api
                         '
                     '''
                 }
