@@ -21,8 +21,6 @@ pipeline {
         IMAGE_REPO = 'fedil/securenotes-backend'
         IMAGE_MAIN_TAG = 'main'
         IMAGE_LATEST_TAG = 'latest'
-        // TODO: Set to true once the Jenkins SonarQube webhook/quality gate is configured.
-        ENABLE_SONAR_QUALITY_GATE = 'false'
     }
 
     stages {
@@ -34,7 +32,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }
                 }
             }
 
@@ -62,8 +63,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
 
             steps {
@@ -81,8 +84,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
 
             steps {
@@ -115,8 +120,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
 
             steps {
@@ -139,8 +146,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
             
             steps {
@@ -164,8 +173,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
 
             steps {
@@ -183,8 +194,10 @@ pipeline {
                         branch 'production'
                     }
 
-                    changeset "backend/**"
-                }
+                    anyOf{
+                        changeset "backend/**"
+                        changeset "Jenkinsfile"
+                    }                }
             }
                         
             steps {
@@ -204,8 +217,11 @@ pipeline {
                 allOf {
                     branch 'production'
 
+
+                anyOf{
                     changeset "backend/**"
-                }
+                    changeset "Jenkinsfile"
+                }                }
             }
 
             steps {
@@ -241,9 +257,12 @@ pipeline {
                 allOf {
                     branch 'production'
     
+                anyOf{
                     changeset "backend/**"
-                }
+                    changeset "Jenkinsfile"
+                }                }
             }
+
             steps {
                 sshagent(credentials: ['ec2-deploy']) {
                     sh """
@@ -259,6 +278,11 @@ pipeline {
         stage('Deploy | Blue-Green') {
             when {
                 branch 'production'
+            
+                anyOf{
+                    changeset "backend/**"
+                    changeset "Jenkinsfile"
+                }
             }
 
             steps {
