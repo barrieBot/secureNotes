@@ -312,7 +312,7 @@ pipeline {
                     <p>Build failed: <b>${env.JOB_NAME} [${env.BUILD_NUMBER}]</b></p>
                     <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                 """,
-                to: ['if24b229@technikum-wien.at', 'if24b007@technikum-wien.at', 'wi25x014@technikum-wien.at'],
+                to: 'if24b229@technikum-wien.at, if24b007@technikum-wien.at, wi25x014@technikum-wien.at',
                 mimeType: 'text/html'
             )
 
