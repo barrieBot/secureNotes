@@ -78,7 +78,7 @@ describe('generateUserHash', () => {
         // assert
         expectHex64(hashSameUser);
         expectHex64(hashDifferentPassword);
-        expect(hashSameUser).toBe(hashDifferentPassword)
+        expect(hashSameUser).not.toBe(hashDifferentPassword)
     });
 
     it('produces a different hash for a different username (salt)', () => {
