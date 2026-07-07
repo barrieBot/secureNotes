@@ -1,8 +1,8 @@
 import http from 'k6/http';
 import { check, fail, sleep } from 'k6';
-import { CreateNoteDTO } from '../models/CreateNoteDTO'
-import { GetNoteDTO } from '../models/GetNotDTO'
-import {encrypt, decrypt, generateUserHash} from '../crypto'
+import * as CryptoJS from 'crypto-js';
+
+
 
 export const options = {
     stages: [
@@ -20,6 +20,30 @@ export const options = {
 interface AuthResponse {
     token?: string;
 };
+
+interface GetNoteDTO {
+    title: string;
+    note: string;
+    error: string | null;
+}
+
+interface CreateNoteDTO {
+    noteID: string | undefined;
+    error: string | null;
+}
+
+function encrypt(text: string, key: string) {
+    return CryptoJS.AES.encrypt(text, key).toString();
+}
+
+function generateUserHash(username: string, password: string) {
+    return CryptoJS.PBKDF2(password, username, {
+        keySize: 256 / 32,
+        iterations: 10,
+        hasher: CryptoJS.algo.SHA256,
+    }).toString();
+}
+
 
 const BASE_URL ='http://localhost:1234/api/v1'
 
