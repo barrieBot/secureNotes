@@ -305,12 +305,22 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Backend Jenkins pipeline completed successfully.'
+        failure {
+            emailext (
+                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                body: """
+                    <p>Build failed: <b>${env.JOB_NAME} [${env.BUILD_NUMBER}]</b></p>
+                    <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                """,
+                to: 'if24b229@technikum-wien.at, if24b007@technikum-wien.at, wi25x014@technikum-wien.at',
+                mimeType: 'text/html'
+            )
+
+            echo 'Backend Jenkins pipeline failed. Check the failed stage logs above.'
         }
 
-        failure {
-            echo 'Backend Jenkins pipeline failed. Check the failed stage logs above.'
+        success {
+            echo 'Backend Jenkins pipeline completed successfully.'
         }
 
         always {
