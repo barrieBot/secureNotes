@@ -10,7 +10,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 // auth jwt interceptor
-// auth jwt interceptor
 export const auth = async (req: FastifyRequest, res: FastifyReply) => {
     try {
         // `jwtVerify` is provided by the `fastify-jwt` plugin.
