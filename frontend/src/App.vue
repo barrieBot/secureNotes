@@ -39,7 +39,7 @@ onMounted(() => {
   background: var(--app-background);
   color: var(--app-text);
 
-  --app-background: #f4f6f8;
+  --app-background: #ffc0cb;
   --app-surface: #ffffff;
   --app-text: #1f2933;
   --app-muted-text: #52606d;
