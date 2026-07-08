@@ -18,6 +18,7 @@ export const auth = async (req: FastifyRequest, res: FastifyReply) => {
         // Respond with a generic error message. In production you might
         // want to differentiate between authentication and authorization
         // errors, but keep the message minimal for security.
+        console.error('Authentication failed')
         res.status(400).send({ error: 'Failed to verify token' })
     }
 }
