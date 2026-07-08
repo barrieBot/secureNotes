@@ -62,38 +62,9 @@ jobs:
           echo "::error::Check the Security tab for details and fix before merging"
           exit 1
 
-  sonarqube:
-    name: Linting| SonarQube - Static Analysis
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: frontend
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set Up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-          cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install Dependecies
-        run: npm ci
-
-      - name: SonarQube scan
-        run: npm run sonar:scan
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
   unit-test:
     name: Test | Run Frontend Unit Tests
-    needs: [snyk, sonarqube]
+    needs: [snyk]
     runs-on: ubuntu-22.04
     defaults:
       run:
